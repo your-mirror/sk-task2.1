@@ -11,7 +11,6 @@ app.get('/', function (req, res) {
 });
 
 app.get('/name', function (req, res) {
-  console.log(_.get(req.query, 'fullname', ''));
   const fullName = _.get(req.query, 'fullname', '');
   const wrongSymbols = fullName.match(/[\d_\/]/);
   const match = _.get(req.query, 'fullname', '').match(/([\S]+)\s*([\S]*)\s*([\S]*)\s*(.*)/i);
@@ -19,7 +18,6 @@ app.get('/name', function (req, res) {
 
   if (fullName.length === 0 || wrongSymbols !== null || parts.length > 3) {
     res.send(200, 'Invalid fullname');
-    return;
   }
   let shortName = '';
   shortName += _.capitalize(_.last(parts).toLowerCase());
@@ -33,6 +31,17 @@ app.get('/name', function (req, res) {
   res.send(200, shortName);
 });
 
+app.get('/task3', function (req, res) {
+  const usernameUrl = _.get(req.query, 'username', '');
+  const match = usernameUrl
+    .match(/(?:https:|http:)?(?:\/\/)?(?:[a-z0-9\.-]+\.[a-z0-9-]+)?\/?@?([a-z\.\_]+)/i);
+  const username = _.chain(match).drop().value();
+  if (username.length === 0) {
+    res.send(200, 'Invalid fullname');
+  }
+  res.send(200, '@' + username);
+});
+
 app.listen(5000, function () {
-  console.log('Example app listening on port 3000!');
+  console.log('Example app listening on port 5000!');
 });
